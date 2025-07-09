@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: "https://apiv2.widiyasetiya.my.id/api", // sesuaikan dengan backend kamu
+  baseURL: "https://apiv2.iotwidiyasetiya.my.id/api", // sesuaikan dengan backend kamu
   withCredentials: true,
 
   //https://srviot.ariandto.cloud/api

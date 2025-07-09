@@ -1,10 +1,10 @@
 {
   "name": "Smart Door Control",
-  "short_name": "DoorCtrl",
+  "short_name": "SmartDoor",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0f172a",
-  "theme_color": "#0f172a",
+  "background_color": "#3b82f6",
+  "theme_color": "#3b82f6",
   "icons": [
     {
       "src": "/icon.png",

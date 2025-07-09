@@ -2,6 +2,7 @@ import React, { useEffect, useState, FormEvent } from "react";
 import { AlertTriangle, MailPlus, Trash2, Shield, Mail, Users, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import apiClient from "../../config/apiClient";
+import DeleteAccessModal from "../modals/deleteAccessModal";
 
 interface AllowedEmail {
   email: string;
@@ -12,6 +13,9 @@ const SettingPage: React.FC = () => {
   const [newEmail, setNewEmail] = useState("");
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [emailToDelete, setEmailToDelete] = useState<string | null>(null);
+  const [modalLoading, setModalLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [darkMode, setDarkMode] = useState(() => {
     return localStorage.getItem("theme") === "dark" ||
@@ -70,16 +74,29 @@ const SettingPage: React.FC = () => {
     }
   };
 
-  const handleDelete = async (email: string) => {
-    if (!window.confirm(`Hapus akses untuk ${email}?`)) return;
+  const openDeleteModal = (email: string) => {
+    setEmailToDelete(email);
+    setShowDeleteModal(true);
+  };
+
+   const handleDeleteConfirmed = async () => {
+    if (!emailToDelete) return;
+    setModalLoading(true);
     try {
-      await apiClient.delete(`/allowed-emails/${encodeURIComponent(email)}`, {
-        withCredentials: true,
-      });
-      setEmails((prev) => prev.filter((e) => e.email !== email));
+      await apiClient.delete(
+        `/allowed-emails/${encodeURIComponent(emailToDelete)}`,
+        { withCredentials: true }
+      );
+      setEmails((prev) =>
+        prev.filter((e) => e.email !== emailToDelete)
+      );
       setError(null);
     } catch (err: any) {
       setError(err.response?.data?.error || "Gagal menghapus email");
+    } finally {
+      setModalLoading(false);
+      setShowDeleteModal(false);
+      setEmailToDelete(null);
     }
   };
 
@@ -161,6 +178,7 @@ const SettingPage: React.FC = () => {
   }
 
   return (
+    <>
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
       {/* Header */}
       <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 transition-colors duration-300">
@@ -297,7 +315,7 @@ const SettingPage: React.FC = () => {
                           </div>
                         </div>
                         <button
-                          onClick={() => handleDelete(email)}
+                          onClick={() => openDeleteModal(email)}
                           className="ml-4 p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-full transition-all duration-200 opacity-0 group-hover:opacity-100"
                           title="Hapus email"
                         >
@@ -321,7 +339,23 @@ const SettingPage: React.FC = () => {
         </footer>
       </main>
     </div>
+      <DeleteAccessModal
+      open={showDeleteModal}
+      title="Hapus Akses Email"
+      message={`Apakah Anda yakin ingin menghapus akses untuk ${emailToDelete}?`}
+      confirmLabel="Hapus"
+      cancelLabel="Batal"
+      onConfirm={handleDeleteConfirmed}
+      onClose={() => {
+        setShowDeleteModal(false);
+        setEmailToDelete(null);
+      }}
+      loading={modalLoading}
+    />
+  </>
   );
 };
+
+
 
 export default SettingPage;
