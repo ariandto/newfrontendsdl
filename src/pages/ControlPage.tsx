@@ -173,7 +173,7 @@ const ControlPage: React.FC = () => {
           {/* CLOSE -------------------------------------------------- */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-200 dark:border-gray-700 flex flex-col items-center">
             <div className="w-20 h-20 rounded-full bg-gradient-to-br from-red-400 to-rose-500 flex items-center justify-center text-white text-3xl shadow mb-4">🔒</div>
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">Tutup Pintu</h3>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">Kunci Pintu</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">Kunci pintu untuk keamanan</p>
             <button
               onClick={() => handleControl("close")}
@@ -186,7 +186,7 @@ const ControlPage: React.FC = () => {
             >
               {loading && !disabledOpen ? (
                 <>
-                  <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" /> Menutup...
+                  <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" /> Mengunci...
                 </>
               ) : (
                 "Tutup Pintu"
